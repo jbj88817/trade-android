@@ -37,6 +37,11 @@ dependencies {
     implementation deps.room.runtime
     annotationProcessor deps.room.compiler
 
+    // 3rd party libs
+    implementation deps.retrofit.runtime
+    implementation deps.retrofit.gson
+    implementation deps.okhttp_logging_interceptor
+
     // Android Testing Support Library's runner and rules
     androidTestImplementation deps.atsl.runner
     androidTestImplementation deps.atsl.rules
