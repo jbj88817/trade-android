@@ -50,6 +50,7 @@ versions.kotlin = "1.2.71"
 versions.paging = "2.0.0"
 versions.navigation = "1.0.0-alpha06"
 versions.work = "1.0.0-alpha09"
+versions.butterknife = "9.0.0-SNAPSHOT"
 def deps = [:]
 
 def support = [:]
@@ -158,6 +159,11 @@ navigation.fragment_ktx = "android.arch.navigation:navigation-fragment-ktx:$vers
 navigation.safe_args_plugin = "android.arch.navigation:navigation-safe-args-gradle-plugin:$versions.navigation"
 navigation.testing_ktx = "android.arch.navigation:navigation-testing-ktx:$versions.navigation"
 deps.navigation = navigation
+
+def butterknife = [:]
+butterknife.runtime = "com.jakewharton:butterknife:$versions.butterknife"
+butterknife.compiler = "com.jakewharton:butterknife-compiler:$versions.butterknife"
+deps.butterknife = butterknife
 
 ext.deps = deps
 

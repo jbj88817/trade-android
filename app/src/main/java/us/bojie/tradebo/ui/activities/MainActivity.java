@@ -1,9 +1,10 @@
-package us.bojie.tradebo;
+package us.bojie.tradebo.ui.activities;
 
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
-import us.bojie.tradebo.ui.main.MainFragment;
+import us.bojie.tradebo.R;
+import us.bojie.tradebo.ui.fragments.MainFragment;
 
 public class MainActivity extends AppCompatActivity {
 
