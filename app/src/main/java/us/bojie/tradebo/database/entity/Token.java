@@ -2,6 +2,11 @@ package us.bojie.tradebo.database.entity;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
+
+import androidx.room.Entity;
+
+@Entity
 public class Token {
 
     /**
@@ -27,6 +32,19 @@ public class Token {
     private String scope;
     @SerializedName("refresh_token")
     private String refreshToken;
+
+    private Date lastRefresh;
+
+    public Token(Object backupCode, String accessToken, int expiresIn, Object mfaCode, String tokenType, String scope, String refreshToken, Date lastRefresh) {
+        this.backupCode = backupCode;
+        this.accessToken = accessToken;
+        this.expiresIn = expiresIn;
+        this.mfaCode = mfaCode;
+        this.tokenType = tokenType;
+        this.scope = scope;
+        this.refreshToken = refreshToken;
+        this.lastRefresh = lastRefresh;
+    }
 
     public Object getBackupCode() {
         return backupCode;
@@ -82,5 +100,13 @@ public class Token {
 
     public void setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
+    }
+
+    public Date getLastRefresh() {
+        return lastRefresh;
+    }
+
+    public void setLastRefresh(Date lastRefresh) {
+        this.lastRefresh = lastRefresh;
     }
 }

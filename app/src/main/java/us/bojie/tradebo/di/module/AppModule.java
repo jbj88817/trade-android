@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import javax.inject.Singleton;
 
@@ -17,6 +19,8 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import us.bojie.tradebo.api.ApiService;
+import us.bojie.tradebo.database.dao.TokenDao;
+import us.bojie.tradebo.repositories.TokenRepository;
 
 @Module
 public class AppModule {
@@ -74,5 +78,18 @@ public class AppModule {
     @Singleton
     ApiService provideApiWebservice(Retrofit restAdapter) {
         return restAdapter.create(ApiService.class);
+    }
+
+    // --- REPOSITORY INJECTION ---
+
+    @Provides
+    Executor provideExecutor() {
+        return Executors.newSingleThreadExecutor();
+    }
+
+    @Provides
+    @Singleton
+    TokenRepository provideTokenRepository(ApiService webservice, TokenDao tokenDao, Executor executor) {
+        return new TokenRepository(webservice, tokenDao, executor);
     }
 }
