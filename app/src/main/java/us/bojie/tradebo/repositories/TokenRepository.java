@@ -22,6 +22,8 @@ import us.bojie.tradebo.database.entity.Token;
 
 public class TokenRepository {
 
+    public static final String TAG = TokenRepository.class.getSimpleName();
+
     private final ApiService webservice;
     private final TokenDao tokenDao;
     private final Executor executor;
@@ -44,14 +46,14 @@ public class TokenRepository {
 
     private void refreshToken() {
         executor.execute(() -> {
-            // Check if user was fetched recently
-            boolean userExists = (tokenDao.hasToken(getMaxRefreshTime(new Date())) != null);
-            // If user have to be updated
-            if (!userExists) {
+            // Check if token was fetched recently
+            boolean tokenExists = (tokenDao.hasToken(getMaxRefreshTime(new Date())) != null);
+            // If token have to be updated
+            if (!tokenExists) {
                 webservice.getToken(Helper.buildOauthRequestFieldMap()).enqueue(new Callback<Token>() {
                     @Override
                     public void onResponse(@NonNull Call<Token> call, @NonNull Response<Token> response) {
-                        Log.e("TAG", "DATA REFRESHED FROM NETWORK");
+                        Log.e(TAG, "DATA REFRESHED FROM NETWORK");
                         Toast.makeText(App.context, "Data refreshed from network !", Toast.LENGTH_LONG).show();
                         executor.execute(() -> {
                             Token token = response.body();
@@ -64,6 +66,7 @@ public class TokenRepository {
 
                     @Override
                     public void onFailure(@NonNull Call<Token> call, @NonNull Throwable t) {
+                        Log.e(TAG, t.getMessage());
                     }
                 });
             }

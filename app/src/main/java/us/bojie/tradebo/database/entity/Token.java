@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Date;
 
 import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
 @Entity
 public class Token {
@@ -19,14 +20,17 @@ public class Token {
      * refresh_token : WkJr9LrKnQ3j0qzS3zjedMsKZQI2KN
      */
 
+    @PrimaryKey(autoGenerate = true)
+    private int id;
+
     @SerializedName("backup_code")
-    private Object backupCode;
+    private String backupCode;
     @SerializedName("access_token")
     private String accessToken;
     @SerializedName("expires_in")
     private int expiresIn;
     @SerializedName("mfa_code")
-    private Object mfaCode;
+    private String mfaCode;
     @SerializedName("token_type")
     private String tokenType;
     private String scope;
@@ -35,7 +39,7 @@ public class Token {
 
     private Date lastRefresh;
 
-    public Token(Object backupCode, String accessToken, int expiresIn, Object mfaCode, String tokenType, String scope, String refreshToken, Date lastRefresh) {
+    public Token(String backupCode, String accessToken, int expiresIn, String mfaCode, String tokenType, String scope, String refreshToken, Date lastRefresh) {
         this.backupCode = backupCode;
         this.accessToken = accessToken;
         this.expiresIn = expiresIn;
@@ -46,11 +50,19 @@ public class Token {
         this.lastRefresh = lastRefresh;
     }
 
-    public Object getBackupCode() {
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getBackupCode() {
         return backupCode;
     }
 
-    public void setBackupCode(Object backupCode) {
+    public void setBackupCode(String backupCode) {
         this.backupCode = backupCode;
     }
 
@@ -70,11 +82,11 @@ public class Token {
         this.expiresIn = expiresIn;
     }
 
-    public Object getMfaCode() {
+    public String getMfaCode() {
         return mfaCode;
     }
 
-    public void setMfaCode(Object mfaCode) {
+    public void setMfaCode(String mfaCode) {
         this.mfaCode = mfaCode;
     }
 

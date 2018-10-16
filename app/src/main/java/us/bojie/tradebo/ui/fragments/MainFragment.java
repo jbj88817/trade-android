@@ -25,6 +25,7 @@ public class MainFragment extends Fragment {
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
+
     private MainViewModel mViewModel;
 
     // FOR DESIGN
@@ -61,7 +62,7 @@ public class MainFragment extends Fragment {
 
 
     private void configureViewModel() {
-        mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        mViewModel = ViewModelProviders.of(this, viewModelFactory).get(MainViewModel.class);
         mViewModel.init();
         mViewModel.getToken().observe(this, this::updateUI);
     }
