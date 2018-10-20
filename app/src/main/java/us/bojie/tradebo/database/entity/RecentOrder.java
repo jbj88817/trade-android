@@ -6,6 +6,8 @@ import java.util.List;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
+import us.bojie.tradebo.database.converter.ExecutionsBeanConverter;
 
 @Entity
 public class RecentOrder {
@@ -49,7 +51,8 @@ public class RecentOrder {
     private String timeInForce;
     private String cancel;
     private String id;
-    private String cumulative_quantity;
+    @SerializedName("cumulative_quantity")
+    private String cumulativeQuantity;
     @SerializedName("stop_price")
     private String stopPrice;
     @SerializedName("reject_reason")
@@ -77,6 +80,7 @@ public class RecentOrder {
     @SerializedName("average_price")
     private String averagePrice;
     private String quantity;
+    @TypeConverters(ExecutionsBeanConverter.class)
     private List<ExecutionsBean> executions;
 
     public String getUpdatedAt() {
@@ -119,12 +123,12 @@ public class RecentOrder {
         this.id = id;
     }
 
-    public String getCumulative_quantity() {
-        return cumulative_quantity;
+    public String getCumulativeQuantity() {
+        return cumulativeQuantity;
     }
 
-    public void setCumulative_quantity(String cumulative_quantity) {
-        this.cumulative_quantity = cumulative_quantity;
+    public void setCumulativeQuantity(String cumulativeQuantity) {
+        this.cumulativeQuantity = cumulativeQuantity;
     }
 
     public String getStopPrice() {
