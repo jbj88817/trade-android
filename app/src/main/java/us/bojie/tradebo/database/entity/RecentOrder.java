@@ -4,6 +4,10 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity
 public class RecentOrder {
 
 
@@ -62,8 +66,10 @@ public class RecentOrder {
     @SerializedName("extended_hours")
     private boolean extendedHours;
     private String account;
+    @PrimaryKey
     private String url;
-    private String created_at;
+    @SerializedName("created_at")
+    private String createdAt;
     private String side;
     @SerializedName("override_day_trade_checks")
     private boolean overrideDayTradeChecks;
@@ -217,12 +223,12 @@ public class RecentOrder {
         this.url = url;
     }
 
-    public String getCreated_at() {
-        return created_at;
+    public String getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreated_at(String created_at) {
-        this.created_at = created_at;
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
     }
 
     public String getSide() {
