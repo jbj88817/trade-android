@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
@@ -39,6 +40,7 @@ public class RecentOrder {
     private boolean extendedHours;
     private String account;
     @PrimaryKey
+    @NonNull
     private String url;
     @SerializedName("created_at")
     private String createdAt;

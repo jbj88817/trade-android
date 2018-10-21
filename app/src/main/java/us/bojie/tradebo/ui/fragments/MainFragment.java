@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import androidx.annotation.NonNull;
@@ -18,6 +20,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.android.support.AndroidSupportInjection;
 import us.bojie.tradebo.R;
+import us.bojie.tradebo.database.entity.OwnedStock;
 import us.bojie.tradebo.database.entity.Token;
 import us.bojie.tradebo.ui.viewmodels.MainViewModel;
 
@@ -64,16 +67,23 @@ public class MainFragment extends Fragment {
     private void configureViewModel() {
         mViewModel = ViewModelProviders.of(this, viewModelFactory).get(MainViewModel.class);
         mViewModel.init();
-        mViewModel.getToken().observe(this, this::updateUI);
+        mViewModel.getToken().observe(this, this::updateTokenString);
     }
 
-    // -----------------
-    // UPDATE UI
-    // -----------------
-
-    private void updateUI(@Nullable Token token) {
+    private void updateTokenString(@Nullable Token token) {
         if (token != null) {
-            midTextView.setText(token.getAccessToken());
+            String accessToken = token.getAccessToken();
+            String tokenType = token.getTokenType();
+            String tokenString = tokenType + " " + accessToken;
+            mViewModel.getOwnedStocksList(tokenString).observe(this, this::updateUI);
+        }
+    }
+
+    private void updateUI(@Nullable List<OwnedStock> ownedStockList) {
+        if (ownedStockList != null) {
+            for (OwnedStock ownedStock : ownedStockList) {
+                midTextView.setText(ownedStock.getUrl());
+            }
         }
     }
 }

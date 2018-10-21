@@ -6,22 +6,18 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import androidx.room.TypeConverter;
 import us.bojie.tradebo.database.entity.RecentOrder;
 
 public class ExecutionsBeanConverter {
-
-    @Inject
-    private static Gson mGson;
 
     @TypeConverter
     public static String fromExecutionsBean(List<RecentOrder.ExecutionsBean> executions) {
         if (executions == null) {
             return (null);
         }
-        return mGson.toJson(executions);
+        Gson gson = new Gson();
+        return gson.toJson(executions);
     }
 
     @TypeConverter
@@ -31,6 +27,7 @@ public class ExecutionsBeanConverter {
         }
         Type type = new TypeToken<List<RecentOrder.ExecutionsBean>>() {
         }.getType();
-        return mGson.fromJson(executionsBeanString, type);
+        Gson gson = new Gson();
+        return gson.fromJson(executionsBeanString, type);
     }
 }

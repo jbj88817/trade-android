@@ -2,6 +2,7 @@ package us.bojie.tradebo.database.entity;
 
 import com.google.gson.annotations.SerializedName;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -39,13 +40,14 @@ public class Instrument {
     private String rhsTradability;
     @SerializedName("id")
     @PrimaryKey
+    @NonNull
     private String id;
     @SerializedName("market")
     private String market;
     @SerializedName("simple_name")
     private String simpleName;
     @SerializedName("min_tick_size")
-    private Object minTickSize;
+    private String minTickSize;
     @SerializedName("maintenance_ratio")
     private String maintenanceRatio;
     @SerializedName("tradability")
@@ -78,6 +80,9 @@ public class Instrument {
     private String bloombergUnique;
     @SerializedName("list_date")
     private String listDate;
+
+    public Instrument() {
+    }
 
     public String getMarginInitialRatio() {
         return marginInitialRatio;
@@ -119,11 +124,11 @@ public class Instrument {
         this.simpleName = simpleName;
     }
 
-    public Object getMinTickSize() {
+    public String getMinTickSize() {
         return minTickSize;
     }
 
-    public void setMinTickSize(Object minTickSize) {
+    public void setMinTickSize(String minTickSize) {
         this.minTickSize = minTickSize;
     }
 

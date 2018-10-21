@@ -1,5 +1,7 @@
 package us.bojie.tradebo.database.dao;
 
+import java.util.List;
+
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
@@ -12,8 +14,8 @@ import static androidx.room.OnConflictStrategy.REPLACE;
 public interface OwnedStockDao {
 
     @Insert(onConflict = REPLACE)
-    void save(OwnedStock ownedStock);
+    void save(List<OwnedStock> ownedStocks);
 
     @Query("SELECT * FROM ownedstock")
-    LiveData<OwnedStock> load();
+    LiveData<List<OwnedStock>> load();
 }

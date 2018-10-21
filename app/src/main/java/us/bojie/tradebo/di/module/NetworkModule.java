@@ -37,7 +37,6 @@ public class NetworkModule {
 
             Request request = original.newBuilder()
                     .header("Accept", "*/*")
-                    .header("Accept-Encoding", "gzip, deflate")
                     .header("Accept-Language", "en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7")
                     .header("X-Robinhood-API-Version", "1.152.0")
                     .header("User-Agent", "Robinhood/5.32.0 (com.robinhood.release.Robinhood; build:3814; iOS 10.3.3)")

@@ -8,6 +8,8 @@ import androidx.room.Room;
 import dagger.Module;
 import dagger.Provides;
 import us.bojie.tradebo.database.MyDatabase;
+import us.bojie.tradebo.database.dao.InstrumentDao;
+import us.bojie.tradebo.database.dao.OwnedStockDao;
 import us.bojie.tradebo.database.dao.TokenDao;
 
 @Module
@@ -17,11 +19,19 @@ public class DatabaseModule {
     @Singleton
     MyDatabase provideDatabase(Application application) {
         return Room.databaseBuilder(application,
-                MyDatabase.class, "MyDatabase.db")
+                MyDatabase.class, "TradeBo.db")
                 .build();
     }
 
     @Provides
     @Singleton
-    TokenDao provideUserDao(MyDatabase database) { return database.tokenDao(); }
+    TokenDao provideTokenDao(MyDatabase database) { return database.tokenDao(); }
+
+    @Provides
+    @Singleton
+    OwnedStockDao provideOwnedStockDao(MyDatabase database) { return database.ownedStockDao(); }
+
+    @Provides
+    @Singleton
+    InstrumentDao provideInstrumentDao(MyDatabase database) { return database.instrumentDao(); }
 }

@@ -2,6 +2,7 @@ package us.bojie.tradebo.database.entity;
 
 import com.google.gson.annotations.SerializedName;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -20,6 +21,7 @@ public class OwnedStock {
     private String intradayAverageBuyPrice;
     @SerializedName("url")
     @PrimaryKey
+    @NonNull
     private String url;
     @SerializedName("shares_held_for_options_collateral")
     private String sharesHeldForOptionsCollateral;
@@ -41,6 +43,9 @@ public class OwnedStock {
     private String sharesPendingFromOptionsEvents;
     @SerializedName("quantity")
     private String quantity;
+
+    public OwnedStock() {
+    }
 
     public String getSharesHeldForStockGrants() {
         return sharesHeldForStockGrants;
