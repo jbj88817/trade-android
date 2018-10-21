@@ -15,7 +15,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import us.bojie.tradebo.App;
-import us.bojie.tradebo.Helper;
+import us.bojie.tradebo.utils.Helper;
 import us.bojie.tradebo.api.ApiService;
 import us.bojie.tradebo.database.dao.TokenDao;
 import us.bojie.tradebo.database.entity.Token;
