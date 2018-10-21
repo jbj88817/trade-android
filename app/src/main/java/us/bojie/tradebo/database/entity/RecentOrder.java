@@ -12,37 +12,6 @@ import us.bojie.tradebo.database.converter.ExecutionsBeanConverter;
 @Entity
 public class RecentOrder {
 
-
-    /**
-     * updated_at : 2018-10-11T17:29:05.822790Z
-     * ref_id : 959e80a2-a5a8-4319-9203-4f82715df751
-     * time_in_force : gfd
-     * fees : 0.00
-     * cancel : null
-     * response_category : unknown
-     * id : f2df4fdf-375c-4cbf-a32a-cfb8a414ebce
-     * cumulative_quantity : 7.00000
-     * stop_price : null
-     * reject_reason : null
-     * instrument : https://api.robinhood.com/instruments/f3acdd2f-6580-4c75-a69c-81481cc4c235/
-     * state : filled
-     * trigger : immediate
-     * override_dtbp_checks : false
-     * type : market
-     * last_transaction_at : 2018-10-11T17:29:05.547000Z
-     * price : 73.14000000
-     * executions : [{"timestamp":"2018-10-11T17:29:05.547000Z","price":"69.68930000","settlement_date":"2018-10-15","id":"19bce5db-8bd1-4659-a6c4-934a4f8f5876","quantity":"7.00000"}]
-     * extended_hours : false
-     * account : https://api.robinhood.com/accounts/5QW52934/
-     * url : https://api.robinhood.com/orders/f2df4fdf-375c-4cbf-a32a-cfb8a414ebce/
-     * created_at : 2018-10-11T17:29:04.379963Z
-     * side : buy
-     * override_day_trade_checks : false
-     * position : https://api.robinhood.com/positions/5QW52934/f3acdd2f-6580-4c75-a69c-81481cc4c235/
-     * average_price : 69.68930000
-     * quantity : 7.00000
-     */
-
     @SerializedName("updated_at")
     private String updatedAt;
     @SerializedName("ref_id")

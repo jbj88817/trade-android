@@ -10,16 +10,6 @@ import androidx.room.PrimaryKey;
 @Entity
 public class Token {
 
-    /**
-     * backup_code : null
-     * access_token : eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6ImJCNHJ2VG8zbDIzV2lybERzZzRPR2Fvb1ptR3hacSIsInVzZXJfaWQiOiI0OGM4NTIwNC1kZTYwLTQwNDAtYTQ4Mi05ZmMwNWRkNTNhYzQiLCJvcHRpb25zIjp0cnVlLCJleHAiOjE1MzkzOTE2OTN9.ZIJsUwUn98OxTEK_TdtFmfu2U-dSyVOM76yW6lo8nL1paRL9FVrnIfvjVDM1Zc8WBHcahxGPXtctHTAmUn_2WPcasDIcmY-I0Ekk0CKbqpgLO2OdV5sgdBOHjh0lKX6H705kwQGTEitY6YnFMtt6rmdq6e4yEELKZeUw_EhR7jCS_r5XmaA6x3U4J1tLOXK4-UB3Qgqq3Gt8IZFs6zaqR1Zt88XQG8DAkQWG-F3sWdQkZ6890xyNvaR6s6jce08-pThFMkhy-WbFyRvSDdUGQFWRXpuEIcR7quMWd1sa7ua2_2soGfWTuh7MvM00RQUIiBUDpLhp59_2jbKeHX3RYw
-     * expires_in : 86400
-     * mfa_code : null
-     * token_type : Bearer
-     * scope : internal
-     * refresh_token : WkJr9LrKnQ3j0qzS3zjedMsKZQI2KN
-     */
-
     @PrimaryKey(autoGenerate = true)
     private int id;
 
