@@ -51,6 +51,7 @@ versions.paging = "2.0.0"
 versions.navigation = "1.0.0-alpha06"
 versions.work = "1.0.0-alpha09"
 versions.butterknife = "9.0.0-SNAPSHOT"
+versions.flipper = "0.10.0"
 def deps = [:]
 
 def support = [:]
@@ -139,7 +140,7 @@ deps.android_gradle_plugin = "com.android.tools.build:gradle:$versions.android_g
 ext.deps = deps
 
 def build_versions = [:]
-build_versions.min_sdk = 14
+build_versions.min_sdk = 15
 build_versions.target_sdk = 28
 build_versions.build_tools = "28.0.3"
 ext.build_versions = build_versions
@@ -164,6 +165,10 @@ def butterknife = [:]
 butterknife.runtime = "com.jakewharton:butterknife:$versions.butterknife"
 butterknife.compiler = "com.jakewharton:butterknife-compiler:$versions.butterknife"
 deps.butterknife = butterknife
+
+def flipper = [:]
+flipper.runtime = "com.facebook.flipper:flipper:$versions.flipper"
+deps.flipper = flipper
 
 ext.deps = deps
 

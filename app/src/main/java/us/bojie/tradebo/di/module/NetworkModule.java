@@ -1,5 +1,7 @@
 package us.bojie.tradebo.di.module;
 
+import com.facebook.flipper.plugins.network.FlipperOkhttpInterceptor;
+import com.facebook.flipper.plugins.network.NetworkFlipperPlugin;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -26,7 +28,13 @@ public class NetworkModule {
 
     @Provides
     @Singleton
-    OkHttpClient provideOkHttpClient() {
+    NetworkFlipperPlugin provideNetworkFlipperPlugin() {
+        return new NetworkFlipperPlugin();
+    }
+
+    @Provides
+    @Singleton
+    OkHttpClient provideOkHttpClient(NetworkFlipperPlugin plugin) {
         // logging
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -48,6 +56,7 @@ public class NetworkModule {
 
         return new OkHttpClient.Builder()
                 .addInterceptor(headerInterceptor)
+                .addInterceptor(new FlipperOkhttpInterceptor(plugin))
                 .addInterceptor(logging)
                 .build();
 
