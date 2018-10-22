@@ -7,6 +7,7 @@ import javax.inject.Inject;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
+import us.bojie.tradebo.database.entity.Instrument;
 import us.bojie.tradebo.database.entity.OwnedStock;
 import us.bojie.tradebo.database.entity.Token;
 import us.bojie.tradebo.repositories.InstrumentRepository;
@@ -39,7 +40,11 @@ public class MainViewModel extends ViewModel {
         return this.token;
     }
 
-    public LiveData<List<OwnedStock>> getOwnedStocksList(String tokenString) {
-        return ownedStockRepository.getOwnedStockList(tokenString);
+    public LiveData<List<OwnedStock>> getOwnedStocksList(String tokenString, boolean isRefreshing) {
+        return ownedStockRepository.getOwnedStockList(tokenString, isRefreshing);
+    }
+
+    public LiveData<Instrument> getInstrument(String instrumentId) {
+        return instrumentRepository.getInstrument(instrumentId);
     }
 }

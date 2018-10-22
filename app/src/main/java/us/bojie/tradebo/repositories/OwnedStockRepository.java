@@ -33,9 +33,7 @@ public class OwnedStockRepository {
         this.executor = executor;
     }
 
-    // ---
-
-    public LiveData<List<OwnedStock>> getOwnedStockList(String tokenString) {
+    public LiveData<List<OwnedStock>> getOwnedStockList(String tokenString, boolean isRefreshing) {
         final LiveData<List<OwnedStock>> ownedStocks = ownedStockDao.load();
 
         https://stackoverflow.com/a/44471378/4186942

@@ -20,6 +20,7 @@ public class DatabaseModule {
     MyDatabase provideDatabase(Application application) {
         return Room.databaseBuilder(application,
                 MyDatabase.class, "TradeBo.db")
+                .allowMainThreadQueries()
                 .build();
     }
 

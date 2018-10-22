@@ -75,15 +75,16 @@ public class MainFragment extends Fragment {
             String accessToken = token.getAccessToken();
             String tokenType = token.getTokenType();
             String tokenString = tokenType + " " + accessToken;
-            mViewModel.getOwnedStocksList(tokenString).observe(this, this::updateUI);
+            mViewModel.getOwnedStocksList(tokenString, false).observe(this, this::updateInstruments);
         }
     }
 
-    private void updateUI(@Nullable List<OwnedStock> ownedStockList) {
+    private void updateInstruments(@Nullable List<OwnedStock> ownedStockList) {
         if (ownedStockList != null) {
-            for (OwnedStock ownedStock : ownedStockList) {
-                midTextView.setText(ownedStock.getUrl());
-            }
+            OwnedStock ownedStock = ownedStockList.get(0);
+            String first = ownedStock.getInstrument().replaceFirst("https://api.robinhood.com/instruments/", "");
+            String instrumentId = first.replace("/", "");
+            mViewModel.getInstrument(instrumentId).observe(this, instrument -> midTextView.setText(instrument.getSymbol()));
         }
     }
 }
