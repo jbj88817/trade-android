@@ -84,7 +84,9 @@ public class MainFragment extends Fragment {
             OwnedStock ownedStock = ownedStockList.get(0);
             String first = ownedStock.getInstrument().replaceFirst("https://api.robinhood.com/instruments/", "");
             String instrumentId = first.replace("/", "");
-            mViewModel.getInstrument(instrumentId).observe(this, instrument -> midTextView.setText(instrument.getSymbol()));
+            mViewModel.getInstrument(instrumentId).observe(this, instrument ->
+                    mViewModel.getQuote(instrument.getSymbol()).observe(this, quote ->
+                            midTextView.setText(quote.getAskPrice())));
         }
     }
 }

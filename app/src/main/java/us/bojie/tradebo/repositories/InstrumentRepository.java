@@ -18,7 +18,7 @@ import us.bojie.tradebo.database.entity.Instrument;
 
 public class InstrumentRepository {
 
-    public static final String TAG = InstrumentRepository.class.getSimpleName();
+    private static final String TAG = InstrumentRepository.class.getSimpleName();
     private final MediatorLiveData<Instrument> instrumentLiveData = new MediatorLiveData<>();
 
     private final ApiService webservice;
