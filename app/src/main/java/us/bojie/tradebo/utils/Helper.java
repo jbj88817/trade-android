@@ -7,9 +7,9 @@ public class Helper {
 
     public static Map<String, String> buildOauthRequestFieldMap() {
         Map<String, String> res = new HashMap<>();
-        res.put("grant_type", Constant.GRANT_TYPE);
-        res.put("scope", Constant.SCOPE);
-        res.put("client_id", Constant.CLIENT_ID);
+        res.put("grant_type", Constants.GRANT_TYPE);
+        res.put("scope", Constants.SCOPE);
+        res.put("client_id", Constants.CLIENT_ID);
         return res;
     }
 }
