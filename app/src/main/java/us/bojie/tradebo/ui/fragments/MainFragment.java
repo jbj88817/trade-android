@@ -1,6 +1,7 @@
 package us.bojie.tradebo.ui.fragments;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +40,12 @@ public class MainFragment extends Fragment {
         return new MainFragment();
     }
 
+    @Override
+    public void onAttach(Context context) {
+        this.configureDagger();
+        super.onAttach(context);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -51,7 +58,6 @@ public class MainFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        this.configureDagger();
         this.configureViewModel();
     }
 

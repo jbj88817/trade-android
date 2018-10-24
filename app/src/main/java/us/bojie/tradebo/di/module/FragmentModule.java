@@ -8,5 +8,5 @@ import us.bojie.tradebo.ui.fragments.MainFragment;
 @Module
 public abstract class FragmentModule {
     @ContributesAndroidInjector
-    abstract MainFragment contributeUserProfileFragment();
+    abstract MainFragment contributeMainFragmentFragment();
 }
