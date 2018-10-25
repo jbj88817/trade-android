@@ -14,6 +14,7 @@ import us.bojie.tradebo.bean.CommonResponse;
 import us.bojie.tradebo.bean.Quote;
 import us.bojie.tradebo.bean.ResultResponse;
 import us.bojie.tradebo.database.entity.Instrument;
+import us.bojie.tradebo.database.entity.Order;
 import us.bojie.tradebo.database.entity.OwnedStock;
 import us.bojie.tradebo.database.entity.Token;
 
@@ -33,4 +34,7 @@ public interface ApiService {
 
     @GET("quotes/")
     Call<ResultResponse<List<Quote>>> getQuotes(@Query("symbols") String symbols);
+
+    @POST("orders/")
+    Call<Order> postOrder(@Header("Authorization") String token);
 }

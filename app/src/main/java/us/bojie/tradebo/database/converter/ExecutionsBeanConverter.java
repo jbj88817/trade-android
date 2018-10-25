@@ -7,12 +7,12 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 import androidx.room.TypeConverter;
-import us.bojie.tradebo.database.entity.RecentOrder;
+import us.bojie.tradebo.database.entity.Order;
 
 public class ExecutionsBeanConverter {
 
     @TypeConverter
-    public static String fromExecutionsBean(List<RecentOrder.ExecutionsBean> executions) {
+    public static String fromExecutionsBean(List<Order.ExecutionsBean> executions) {
         if (executions == null) {
             return (null);
         }
@@ -21,11 +21,11 @@ public class ExecutionsBeanConverter {
     }
 
     @TypeConverter
-    public static List<RecentOrder.ExecutionsBean> toExecutionsBean(String executionsBeanString) {
+    public static List<Order.ExecutionsBean> toExecutionsBean(String executionsBeanString) {
         if (executionsBeanString == null) {
             return (null);
         }
-        Type type = new TypeToken<List<RecentOrder.ExecutionsBean>>() {
+        Type type = new TypeToken<List<Order.ExecutionsBean>>() {
         }.getType();
         Gson gson = new Gson();
         return gson.fromJson(executionsBeanString, type);

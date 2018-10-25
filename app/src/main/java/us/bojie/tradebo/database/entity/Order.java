@@ -11,7 +11,7 @@ import androidx.room.TypeConverters;
 import us.bojie.tradebo.database.converter.ExecutionsBeanConverter;
 
 @Entity
-public class RecentOrder {
+public class Order {
 
     @SerializedName("updated_at")
     private String updatedAt;
