@@ -14,7 +14,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import us.bojie.tradebo.api.ApiService;
-import us.bojie.tradebo.bean.Quote;
+import us.bojie.tradebo.bean.response.Quote;
 import us.bojie.tradebo.database.entity.Instrument;
 import us.bojie.tradebo.database.entity.OwnedStock;
 import us.bojie.tradebo.database.entity.Token;

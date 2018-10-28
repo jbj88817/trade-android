@@ -13,7 +13,7 @@ import androidx.work.WorkerParameters;
 import okhttp3.ResponseBody;
 import retrofit2.Response;
 import us.bojie.tradebo.api.ApiService;
-import us.bojie.tradebo.bean.Quote;
+import us.bojie.tradebo.bean.response.Quote;
 import us.bojie.tradebo.utils.Constants;
 
 public class GetQuoteWorker extends Worker {

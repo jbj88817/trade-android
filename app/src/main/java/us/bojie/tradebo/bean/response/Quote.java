@@ -1,4 +1,4 @@
-package us.bojie.tradebo.bean;
+package us.bojie.tradebo.bean.response;
 
 import com.google.gson.annotations.SerializedName;
 

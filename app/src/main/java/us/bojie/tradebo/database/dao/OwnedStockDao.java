@@ -18,4 +18,7 @@ public interface OwnedStockDao {
 
     @Query("SELECT * FROM ownedstock")
     LiveData<List<OwnedStock>> load();
+
+    @Query("SELECT * FROM ownedstock where instrument = :instrument")
+    LiveData<OwnedStock> loadByInstrument(String instrument);
 }

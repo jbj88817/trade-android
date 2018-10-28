@@ -13,7 +13,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import us.bojie.tradebo.api.ApiService;
-import us.bojie.tradebo.bean.CommonResponse;
+import us.bojie.tradebo.bean.response.CommonResponse;
 import us.bojie.tradebo.database.dao.OwnedStockDao;
 import us.bojie.tradebo.database.entity.OwnedStock;
 

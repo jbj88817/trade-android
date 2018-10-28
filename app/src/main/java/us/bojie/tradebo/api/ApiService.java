@@ -10,9 +10,10 @@ import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
-import us.bojie.tradebo.bean.CommonResponse;
-import us.bojie.tradebo.bean.Quote;
-import us.bojie.tradebo.bean.ResultResponse;
+import us.bojie.tradebo.bean.request.OrderRequest;
+import us.bojie.tradebo.bean.response.CommonResponse;
+import us.bojie.tradebo.bean.response.Quote;
+import us.bojie.tradebo.bean.response.ResultResponse;
 import us.bojie.tradebo.database.entity.Instrument;
 import us.bojie.tradebo.database.entity.Order;
 import us.bojie.tradebo.database.entity.OwnedStock;
@@ -36,5 +37,5 @@ public interface ApiService {
     Call<ResultResponse<List<Quote>>> getQuotes(@Query("symbols") String symbols);
 
     @POST("orders/")
-    Call<Order> postOrder(@Header("Authorization") String token);
+    Call<Order> postOrder(@Header("Authorization") String token, @Body OrderRequest orderRequest);
 }
