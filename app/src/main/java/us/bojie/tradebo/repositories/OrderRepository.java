@@ -27,4 +27,8 @@ public class OrderRepository {
     public LiveData<Order> getOrder(String orderId) {
         return orderDao.load(orderId);
     }
+
+    public void saveOrder(Order order) {
+        orderDao.save(order);
+    }
 }

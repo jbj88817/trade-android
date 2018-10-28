@@ -21,9 +21,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.android.support.AndroidSupportInjection;
 import us.bojie.tradebo.R;
+import us.bojie.tradebo.bean.request.OrderRequest;
 import us.bojie.tradebo.database.entity.OwnedStock;
 import us.bojie.tradebo.database.entity.Token;
 import us.bojie.tradebo.ui.viewmodels.MainViewModel;
+import us.bojie.tradebo.utils.StringUtil;
 import us.bojie.tradebo.utils.TokenUtil;
 
 public class MainFragment extends Fragment {
@@ -90,11 +92,18 @@ public class MainFragment extends Fragment {
     private void updateInstruments(@Nullable List<OwnedStock> ownedStockList) {
         if (ownedStockList != null) {
             OwnedStock ownedStock = ownedStockList.get(0);
-            String first = ownedStock.getInstrument().replaceFirst("https://api.robinhood.com/instruments/", "");
-            String instrumentId = first.replace("/", "");
-            mViewModel.getInstrument(instrumentId).observe(this, instrument ->
-                    mViewModel.getQuote(instrument.getSymbol()).observe(this, quote ->
-                            midTextView.setText(quote.getAskPrice())));
+            String instrumentUrl = ownedStock.getInstrument();
+            String quantity = ownedStock.getQuantity();
+            String instrumentId = StringUtil.getInstrumentIdFromUrl(instrumentUrl);
+            mViewModel.getInstrument(instrumentId).observe(this, instrument -> {
+                final String symbol = instrument.getSymbol();
+                mViewModel.getQuote(symbol).observe(this, quote -> {
+                    OrderRequest request = new OrderRequest.Builder(instrumentUrl, symbol,
+                            "sell", quantity, "1000").build();
+                    mViewModel.placeOrder(tokenUtil.getTokenString(), request)
+                            .observe(this, order -> midTextView.setText(order.getCancel()));
+                });
+            });
         }
     }
 }

@@ -45,7 +45,7 @@ public class OrderRequest {
         private String side;
         private String stopPrice;
 
-        Builder(String instrument, String symbol, String side, String quantity, String stopPrice) {
+        public Builder(String instrument, String symbol, String side, String quantity, String stopPrice) {
             this.instrument = instrument;
             this.symbol = symbol;
             // FIXME temp

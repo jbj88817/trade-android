@@ -14,11 +14,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import us.bojie.tradebo.api.ApiService;
+import us.bojie.tradebo.bean.request.OrderRequest;
 import us.bojie.tradebo.bean.response.Quote;
 import us.bojie.tradebo.database.entity.Instrument;
+import us.bojie.tradebo.database.entity.Order;
 import us.bojie.tradebo.database.entity.OwnedStock;
 import us.bojie.tradebo.database.entity.Token;
 import us.bojie.tradebo.repositories.InstrumentRepository;
+import us.bojie.tradebo.repositories.OrderRepository;
 import us.bojie.tradebo.repositories.OwnedStockRepository;
 import us.bojie.tradebo.repositories.TokenRepository;
 
@@ -29,14 +32,17 @@ public class MainViewModel extends ViewModel {
     private final TokenRepository tokenRepository;
     private final OwnedStockRepository ownedStockRepository;
     private final InstrumentRepository instrumentRepository;
+    private final OrderRepository orderRepository;
     private final ApiService webservice;
 
     @Inject
     public MainViewModel(TokenRepository tokenRepository, OwnedStockRepository ownedStockRepository,
-                         InstrumentRepository instrumentRepository, ApiService webservice) {
+                         InstrumentRepository instrumentRepository, OrderRepository orderRepository,
+                         ApiService webservice) {
         this.tokenRepository = tokenRepository;
         this.ownedStockRepository = ownedStockRepository;
         this.instrumentRepository = instrumentRepository;
+        this.orderRepository = orderRepository;
         this.webservice = webservice;
     }
 
@@ -74,5 +80,23 @@ public class MainViewModel extends ViewModel {
             }
         });
         return res;
+    }
+
+    public LiveData<Order> placeOrder(String tokenString, OrderRequest orderRequest) {
+        MutableLiveData<Order> orderMutableLiveData = new MutableLiveData<>();
+        webservice.postOrder(tokenString, orderRequest).enqueue(new Callback<Order>() {
+            @Override
+            public void onResponse(Call<Order> call, Response<Order> response) {
+                Order order = response.body();
+                orderRepository.saveOrder(order);
+                orderMutableLiveData.setValue(order);
+            }
+
+            @Override
+            public void onFailure(Call<Order> call, Throwable t) {
+                Log.e(TAG, t.getMessage());
+            }
+        });
+        return orderMutableLiveData;
     }
 }
