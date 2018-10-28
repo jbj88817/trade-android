@@ -1,7 +1,6 @@
 package us.bojie.tradebo.api;
 
 import java.util.List;
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -10,6 +9,7 @@ import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import us.bojie.tradebo.bean.request.OauthRequest;
 import us.bojie.tradebo.bean.request.OrderRequest;
 import us.bojie.tradebo.bean.response.CommonResponse;
 import us.bojie.tradebo.bean.response.Quote;
@@ -22,9 +22,9 @@ import us.bojie.tradebo.database.entity.Token;
 public interface ApiService {
 
     @POST("oauth2/token/")
-    Call<Token> getToken(@Body Map<String, String> body);
+    Call<Token> getToken(@Body OauthRequest body);
 
-    @GET("positions/?nonzero=true/")
+    @GET("positions/?nonzero=true")
     Call<CommonResponse<List<OwnedStock>>> getUserOwnedStock(@Header("Authorization") String token);
 
     @GET("instruments/{instrument_id}/")

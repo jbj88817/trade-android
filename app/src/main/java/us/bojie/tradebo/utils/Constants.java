@@ -8,4 +8,6 @@ public class Constants {
     public static final String KEY_SYMBOL = "symbol";
     public static final String KEY_ASK_PRICE = "askPrice";
     public static final String KEY_MARKET = "market";
+    public static final String KEY_GTC = "gtc";
+    public static final String KEY_STOP = "stop";
 }

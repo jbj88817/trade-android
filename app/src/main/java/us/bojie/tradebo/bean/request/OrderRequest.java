@@ -53,20 +53,23 @@ public class OrderRequest {
             this.side = side;
             this.quantity = quantity;
             this.stopPrice = stopPrice;
+            this.type = Constants.KEY_MARKET;
+            this.timeInForce = Constants.KEY_GTC;
+            this.trigger = Constants.KEY_STOP;
         }
 
         public Builder type(String type) {
-            this.type = type != null ? type : Constants.KEY_MARKET;
+            this.type = type;
             return this;
         }
 
         public Builder timeInForce(String timeInForce) {
-            this.timeInForce = timeInForce != null ? timeInForce : "gtc";
+            this.timeInForce = timeInForce;
             return this;
         }
 
         public Builder trigger(String trigger) {
-            this.trigger = trigger != null ? trigger : "stop";
+            this.trigger = trigger;
             return this;
         }
 

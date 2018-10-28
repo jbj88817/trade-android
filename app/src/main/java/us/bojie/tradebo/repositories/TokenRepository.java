@@ -15,8 +15,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import us.bojie.tradebo.App;
-import us.bojie.tradebo.utils.Helper;
 import us.bojie.tradebo.api.ApiService;
+import us.bojie.tradebo.bean.request.OauthRequest;
 import us.bojie.tradebo.database.dao.TokenDao;
 import us.bojie.tradebo.database.entity.Token;
 
@@ -50,7 +50,9 @@ public class TokenRepository {
             boolean tokenExists = (tokenDao.hasToken(getMaxRefreshTime(new Date())) != null);
             // If token have to be updated
             if (!tokenExists) {
-                webservice.getToken(Helper.buildOauthRequestFieldMap()).enqueue(new Callback<Token>() {
+                webservice.getToken(
+                        new OauthRequest.Builder().build())
+                        .enqueue(new Callback<Token>() {
                     @Override
                     public void onResponse(@NonNull Call<Token> call, @NonNull Response<Token> response) {
                         Log.e(TAG, "DATA REFRESHED FROM NETWORK");
