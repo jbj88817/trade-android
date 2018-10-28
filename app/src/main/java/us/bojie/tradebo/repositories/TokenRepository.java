@@ -35,14 +35,10 @@ public class TokenRepository {
         this.executor = executor;
     }
 
-    // ---
-
     public LiveData<Token> getToken() {
         refreshToken(); // try to refresh data if possible from Api
         return tokenDao.load(); // return a LiveData directly from the database.
     }
-
-    // ---
 
     private void refreshToken() {
         executor.execute(() -> {

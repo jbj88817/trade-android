@@ -9,6 +9,7 @@ import dagger.Module;
 import dagger.Provides;
 import us.bojie.tradebo.database.MyDatabase;
 import us.bojie.tradebo.database.dao.InstrumentDao;
+import us.bojie.tradebo.database.dao.OrderDao;
 import us.bojie.tradebo.database.dao.OwnedStockDao;
 import us.bojie.tradebo.database.dao.TokenDao;
 
@@ -35,4 +36,8 @@ public class DatabaseModule {
     @Provides
     @Singleton
     InstrumentDao provideInstrumentDao(MyDatabase database) { return database.instrumentDao(); }
+
+    @Provides
+    @Singleton
+    OrderDao provideOrderDao(MyDatabase database) { return database.orderDao(); }
 }

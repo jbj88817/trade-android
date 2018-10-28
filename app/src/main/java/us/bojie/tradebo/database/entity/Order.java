@@ -20,6 +20,8 @@ public class Order {
     @SerializedName("time_in_force")
     private String timeInForce;
     private String cancel;
+    @PrimaryKey
+    @NonNull
     private String id;
     @SerializedName("cumulative_quantity")
     private String cumulativeQuantity;
@@ -39,8 +41,6 @@ public class Order {
     @SerializedName("extended_hours")
     private boolean extendedHours;
     private String account;
-    @PrimaryKey
-    @NonNull
     private String url;
     @SerializedName("created_at")
     private String createdAt;
@@ -86,6 +86,7 @@ public class Order {
         this.cancel = cancel;
     }
 
+    @NonNull
     public String getId() {
         return id;
     }

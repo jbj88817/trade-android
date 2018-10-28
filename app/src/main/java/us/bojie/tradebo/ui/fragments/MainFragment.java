@@ -24,11 +24,14 @@ import us.bojie.tradebo.R;
 import us.bojie.tradebo.database.entity.OwnedStock;
 import us.bojie.tradebo.database.entity.Token;
 import us.bojie.tradebo.ui.viewmodels.MainViewModel;
+import us.bojie.tradebo.utils.TokenUtil;
 
 public class MainFragment extends Fragment {
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
+    @Inject
+    TokenUtil tokenUtil;
 
     private MainViewModel mViewModel;
 
@@ -78,10 +81,9 @@ public class MainFragment extends Fragment {
 
     private void updateTokenString(@Nullable Token token) {
         if (token != null) {
-            String accessToken = token.getAccessToken();
-            String tokenType = token.getTokenType();
-            String tokenString = tokenType + " " + accessToken;
-            mViewModel.getOwnedStocksList(tokenString, false).observe(this, this::updateInstruments);
+            tokenUtil.updateTokenString(token);
+            mViewModel.getOwnedStocksList(tokenUtil.getTokenString(), false)
+                    .observe(this, this::updateInstruments);
         }
     }
 
