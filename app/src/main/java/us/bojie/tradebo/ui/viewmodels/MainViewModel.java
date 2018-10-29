@@ -4,6 +4,7 @@ package us.bojie.tradebo.ui.viewmodels;
 import android.util.Log;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -11,7 +12,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.work.Data;
-import androidx.work.OneTimeWorkRequest;
+import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -50,7 +51,7 @@ public class MainViewModel extends ViewModel {
         this.instrumentRepository = instrumentRepository;
         this.orderRepository = orderRepository;
         this.webservice = webservice;
-        this.workManager = workManager;
+        this.workManager = WorkManager.getInstance();
     }
 
     public void init() {
@@ -109,11 +110,15 @@ public class MainViewModel extends ViewModel {
 
     public void startService() {
 
-        workManager.enqueue(new OneTimeWorkRequest.Builder(GetQuoteWorker.class)
-                .setInputData(new Data.Builder().putString(Constants.KEY_SYMBOL, "GOOGL").build()).build());
+        PeriodicWorkRequest workRequest = new PeriodicWorkRequest.Builder(GetQuoteWorker.class,
+                15, TimeUnit.MINUTES)
+                .addTag(Constants.TAG_GET_QUOTE)
+                .setInputData(new Data.Builder().putString(Constants.KEY_SYMBOL, "GOOGL").build()).build();
+
+        workManager.enqueue(workRequest);
     }
 
     public void stopService() {
-
+        workManager.cancelAllWorkByTag(Constants.TAG_GET_QUOTE);
     }
 }

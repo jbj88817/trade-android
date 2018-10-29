@@ -21,5 +21,6 @@ public class Constants {
     public static final String CHANNEL_ID = "VERBOSE_NOTIFICATION" ;
     public static final int NOTIFICATION_ID = 1;
 
+    public static final String TAG_GET_QUOTE = "get_quote_tag";
 
 }
