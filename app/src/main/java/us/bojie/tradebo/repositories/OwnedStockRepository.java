@@ -34,18 +34,23 @@ public class OwnedStockRepository {
     }
 
     public LiveData<List<OwnedStock>> getOwnedStockList(String tokenString, boolean isRefreshing) {
-        final LiveData<List<OwnedStock>> ownedStocks = ownedStockDao.load();
+        if (isRefreshing) {
+            refreshOwnedStockList(tokenString);
+            return ownedStockDao.load();
+        } else {
+            final LiveData<List<OwnedStock>> ownedStocks = ownedStockDao.load();
 
-        https://stackoverflow.com/a/44471378/4186942
-        ownedStocksLive.addSource(ownedStocks, ownedStockList -> {
-            if (ownedStockList == null || ownedStockList.isEmpty()) {
-                refreshOwnedStockList(tokenString);
-            } else {
-                ownedStocksLive.removeSource(ownedStocks);
-                ownedStocksLive.setValue(ownedStockList);
-            }
-        });
-        return ownedStocksLive;
+            https://stackoverflow.com/a/44471378/4186942
+            ownedStocksLive.addSource(ownedStocks, ownedStockList -> {
+                if (ownedStockList == null || ownedStockList.isEmpty()) {
+                    refreshOwnedStockList(tokenString);
+                } else {
+                    ownedStocksLive.removeSource(ownedStocks);
+                    ownedStocksLive.setValue(ownedStockList);
+                }
+            });
+            return ownedStocksLive;
+        }
     }
 
     private void refreshOwnedStockList(String tokenString) {

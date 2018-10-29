@@ -38,4 +38,7 @@ public interface ApiService {
 
     @POST("orders/")
     Call<Order> postOrder(@Header("Authorization") String token, @Body OrderRequest orderRequest);
+
+    @POST("orders/{id}/cancel/")
+    Call<Void> postStopCancalOrder(@Header("Authorization") String token, @Path("id") String orderId);
 }

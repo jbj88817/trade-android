@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.List;
@@ -21,25 +22,28 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.android.support.AndroidSupportInjection;
 import us.bojie.tradebo.R;
-import us.bojie.tradebo.bean.request.OrderRequest;
 import us.bojie.tradebo.database.entity.OwnedStock;
 import us.bojie.tradebo.database.entity.Token;
 import us.bojie.tradebo.ui.viewmodels.MainViewModel;
-import us.bojie.tradebo.utils.StringUtil;
-import us.bojie.tradebo.utils.TokenUtil;
+import us.bojie.tradebo.utils.StringUtils;
+import us.bojie.tradebo.utils.TokenUtils;
 
 public class MainFragment extends Fragment {
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
     @Inject
-    TokenUtil tokenUtil;
+    TokenUtils tokenUtil;
 
     private MainViewModel mViewModel;
 
     // FOR DESIGN
-    @BindView(R.id.message)
-    TextView midTextView;
+    @BindView(R.id.tv_init)
+    TextView initTextView;
+    @BindView(R.id.btn_start)
+    Button startButton;
+    @BindView(R.id.btn_stop)
+    Button stopButton;
 
     public static MainFragment newInstance() {
         return new MainFragment();
@@ -64,11 +68,8 @@ public class MainFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         this.configureViewModel();
+        this.initComponents();
     }
-
-    // -----------------
-    // CONFIGURATION
-    // -----------------
 
     private void configureDagger() {
         AndroidSupportInjection.inject(this);
@@ -84,26 +85,39 @@ public class MainFragment extends Fragment {
     private void updateTokenString(@Nullable Token token) {
         if (token != null) {
             tokenUtil.updateTokenString(token);
-            mViewModel.getOwnedStocksList(tokenUtil.getTokenString(), false)
+            mViewModel.getOwnedStocksList(tokenUtil.getTokenString(), true)
                     .observe(this, this::updateInstruments);
         }
     }
 
     private void updateInstruments(@Nullable List<OwnedStock> ownedStockList) {
         if (ownedStockList != null) {
-            OwnedStock ownedStock = ownedStockList.get(0);
-            String instrumentUrl = ownedStock.getInstrument();
-            String quantity = ownedStock.getQuantity();
-            String instrumentId = StringUtil.getInstrumentIdFromUrl(instrumentUrl);
-            mViewModel.getInstrument(instrumentId).observe(this, instrument -> {
-                final String symbol = instrument.getSymbol();
-                mViewModel.getQuote(symbol).observe(this, quote -> {
-                    OrderRequest request = new OrderRequest.Builder(instrumentUrl, symbol,
-                            "sell", quantity, "1000").build();
-                    mViewModel.placeOrder(tokenUtil.getTokenString(), request)
-                            .observe(this, order -> midTextView.setText(order.getCancel()));
-                });
-            });
+            for (OwnedStock ownedStock : ownedStockList) {
+                mViewModel.getInstrument(StringUtils.getInstrumentIdFromUrl(ownedStock.getInstrument()))
+                        .observe(this, instrument ->
+                                initTextView.setText(getString(R.string.initialized)));
+            }
         }
     }
+
+    private void initComponents() {
+        startButton.setOnClickListener(v -> mViewModel.startService());
+
+        stopButton.setOnClickListener(v -> mViewModel.stopService());
+    }
 }
+
+//            String instrumentUrl = ownedStock.getInstrument();
+//            String quantity = ownedStock.getQuantity();
+//            String instrumentId = StringUtils.getInstrumentIdFromUrl(instrumentUrl);
+//            mViewModel.getInstrument(instrumentId).observe(this, instrument -> {
+//                final String symbol = instrument.getSymbol();
+//                mViewModel.getQuote(symbol).observe(this, quote -> {
+//                    OrderRequest request = new OrderRequest.Builder(instrumentUrl, symbol,
+//                            "sell", quantity, "1000").build();
+////                    mViewModel.placeOrder(tokenUtil.getTokenString(), request)
+////                            .observe(this, order -> midTextView.setText(order.getCancel()));
+//
+//                });
+//            });
+

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">TradeBo</string>
+    <string name="initialized">Initialized!!!</string>
 </resources>

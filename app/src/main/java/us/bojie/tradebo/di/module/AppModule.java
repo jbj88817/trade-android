@@ -6,10 +6,11 @@ import android.content.SharedPreferences;
 
 import javax.inject.Singleton;
 
+import androidx.work.WorkManager;
 import dagger.Module;
 import dagger.Provides;
 import us.bojie.tradebo.utils.Constants;
-import us.bojie.tradebo.utils.TokenUtil;
+import us.bojie.tradebo.utils.TokenUtils;
 
 @Module(includes = {ViewModelModule.class, NetworkModule.class, RepositoryModule.class,
         DatabaseModule.class})
@@ -23,7 +24,13 @@ public class AppModule {
 
     @Provides
     @Singleton
-    TokenUtil providesTokenUtil(SharedPreferences preferences) {
-        return new TokenUtil(preferences);
+    TokenUtils providesTokenUtil(SharedPreferences preferences) {
+        return new TokenUtils(preferences);
+    }
+
+    @Provides
+    @Singleton
+    WorkManager providesWorkManager() {
+        return WorkManager.getInstance();
     }
 }

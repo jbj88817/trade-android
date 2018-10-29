@@ -10,10 +10,14 @@ import javax.inject.Inject;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import us.bojie.tradebo.api.ApiService;
+import us.bojie.tradebo.background.workers.GetQuoteWorker;
 import us.bojie.tradebo.bean.request.OrderRequest;
 import us.bojie.tradebo.bean.response.Quote;
 import us.bojie.tradebo.database.entity.Instrument;
@@ -24,6 +28,7 @@ import us.bojie.tradebo.repositories.InstrumentRepository;
 import us.bojie.tradebo.repositories.OrderRepository;
 import us.bojie.tradebo.repositories.OwnedStockRepository;
 import us.bojie.tradebo.repositories.TokenRepository;
+import us.bojie.tradebo.utils.Constants;
 
 public class MainViewModel extends ViewModel {
     private static final String TAG = MainViewModel.class.getSimpleName();
@@ -34,16 +39,18 @@ public class MainViewModel extends ViewModel {
     private final InstrumentRepository instrumentRepository;
     private final OrderRepository orderRepository;
     private final ApiService webservice;
+    private final WorkManager workManager;
 
     @Inject
     public MainViewModel(TokenRepository tokenRepository, OwnedStockRepository ownedStockRepository,
                          InstrumentRepository instrumentRepository, OrderRepository orderRepository,
-                         ApiService webservice) {
+                         ApiService webservice, WorkManager workManager) {
         this.tokenRepository = tokenRepository;
         this.ownedStockRepository = ownedStockRepository;
         this.instrumentRepository = instrumentRepository;
         this.orderRepository = orderRepository;
         this.webservice = webservice;
+        this.workManager = workManager;
     }
 
     public void init() {
@@ -98,5 +105,15 @@ public class MainViewModel extends ViewModel {
             }
         });
         return orderMutableLiveData;
+    }
+
+    public void startService() {
+
+        workManager.enqueue(new OneTimeWorkRequest.Builder(GetQuoteWorker.class)
+                .setInputData(new Data.Builder().putString(Constants.KEY_SYMBOL, "GOOGL").build()).build());
+    }
+
+    public void stopService() {
+
     }
 }

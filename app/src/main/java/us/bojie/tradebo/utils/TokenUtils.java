@@ -6,13 +6,13 @@ import javax.inject.Inject;
 
 import us.bojie.tradebo.database.entity.Token;
 
-public class TokenUtil {
+public class TokenUtils {
 
     final SharedPreferences sharedPreferences;
     private String tokenString;
 
     @Inject
-    public TokenUtil(SharedPreferences sharedPreferences) {
+    public TokenUtils(SharedPreferences sharedPreferences) {
         this.sharedPreferences = sharedPreferences;
     }
 
