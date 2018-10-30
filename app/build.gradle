@@ -61,6 +61,12 @@ dependencies {
     // Flipper for debugging
     debugImplementation deps.flipper.runtime
 
+    // FireBase
+    implementation (deps.firebase.core) {
+        exclude group: 'com.google.android.gms', module: 'play-services-basement'
+    }
+    implementation deps.firebase.firestore
+
     // Android Testing Support Library's runner and rules
     androidTestImplementation deps.atsl.runner
     androidTestImplementation deps.atsl.rules
@@ -78,3 +84,5 @@ dependencies {
     androidTestImplementation deps.support.app_compat
     androidTestImplementation deps.support.design
 }
+
+apply plugin: 'com.google.gms.google-services'

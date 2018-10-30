@@ -4,6 +4,12 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import androidx.annotation.NonNull;
 import androidx.work.Data;
 import androidx.work.Worker;
@@ -14,7 +20,6 @@ import us.bojie.tradebo.api.ApiService;
 import us.bojie.tradebo.bean.response.Quote;
 import us.bojie.tradebo.di.component.DaggerWorkerCommponent;
 import us.bojie.tradebo.utils.Constants;
-import us.bojie.tradebo.utils.WorkUtils;
 
 public class GetQuoteWorker extends Worker {
 
@@ -48,7 +53,8 @@ public class GetQuoteWorker extends Worker {
                     setOutputData(new Data.Builder()
                             .putString(Constants.KEY_ASK_PRICE,askPrice).build());
 //                    Toast.makeText(getApplicationContext(), askPrice, Toast.LENGTH_SHORT).show();
-                    WorkUtils.makeStatusNotification(askPrice, getApplicationContext());
+//                    WorkUtils.makeStatusNotification(askPrice, getApplicationContext());
+                    saveInFirebase(askPrice);
                 }
                 return Result.SUCCESS;
             }
@@ -58,5 +64,13 @@ public class GetQuoteWorker extends Worker {
             Log.e(TAG, message);
             return Result.FAILURE;
         }
+    }
+
+    private void saveInFirebase(String askPrice) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Map<String,String> map = new HashMap<>();
+        map.put("time", Timestamp.now().toDate().toString());
+        map.put("askPrice", askPrice);
+        db.collection("test").add(map);
     }
 }
