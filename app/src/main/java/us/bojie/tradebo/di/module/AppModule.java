@@ -18,6 +18,12 @@ public class AppModule {
 
     @Provides
     @Singleton
+    Context provideContext(Application app) {
+        return app;
+    }
+
+    @Provides
+    @Singleton
     SharedPreferences providesSharedPreferences(Application application) {
         return application.getSharedPreferences(Constants.NAME_SHARED_PREFERENCES, Context.MODE_PRIVATE);
     }
