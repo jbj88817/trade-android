@@ -5,6 +5,8 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Build;
 
+import java.util.Calendar;
+
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import us.bojie.tradebo.R;
@@ -12,6 +14,13 @@ import us.bojie.tradebo.R;
 import static us.bojie.tradebo.utils.Constants.CHANNEL_ID;
 
 public class WorkUtils {
+
+    public static boolean isInOpenStockMarketTime() {
+        Calendar calendar = Calendar.getInstance();
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minutes = calendar.get(Calendar.MINUTE);
+        return (hour == 6 && minutes >= 30) || (hour == 13 && minutes <= 0);
+    }
 
     public static void makeStatusNotification(String message, Context context) {
 

@@ -20,6 +20,7 @@ import us.bojie.tradebo.api.ApiService;
 import us.bojie.tradebo.bean.response.Quote;
 import us.bojie.tradebo.di.component.DaggerWorkerCommponent;
 import us.bojie.tradebo.utils.Constants;
+import us.bojie.tradebo.utils.WorkUtils;
 
 public class GetQuoteWorker extends Worker {
 
@@ -34,6 +35,9 @@ public class GetQuoteWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
+        if (!WorkUtils.isInOpenStockMarketTime()) {
+            return Result.SUCCESS;
+        }
         String symbol = null;
         try {
             Data args = getInputData();

@@ -110,6 +110,7 @@ public class MainViewModel extends ViewModel {
 
     public void startService() {
 
+        Log.d(TAG, "!!!Service started !!!");
         PeriodicWorkRequest workRequest = new PeriodicWorkRequest.Builder(GetQuoteWorker.class,
                 15, TimeUnit.MINUTES)
                 .addTag(Constants.TAG_GET_QUOTE)
