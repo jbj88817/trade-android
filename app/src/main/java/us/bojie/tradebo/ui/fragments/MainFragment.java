@@ -2,6 +2,7 @@ package us.bojie.tradebo.ui.fragments;
 
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,18 +15,23 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.inject.Inject;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.android.support.AndroidSupportInjection;
 import us.bojie.tradebo.R;
+import us.bojie.tradebo.database.entity.Instrument;
 import us.bojie.tradebo.database.entity.OwnedStock;
 import us.bojie.tradebo.database.entity.Token;
 import us.bojie.tradebo.ui.viewmodels.MainViewModel;
@@ -41,6 +47,8 @@ public class MainFragment extends Fragment {
     TokenUtils tokenUtil;
     @Inject
     FirebaseFirestore db;
+    @Inject
+    SharedPreferences sharedPreferences;
 
     private MainViewModel mViewModel;
 
@@ -92,20 +100,35 @@ public class MainFragment extends Fragment {
     private void updateTokenString(@Nullable Token token) {
         if (token != null) {
             tokenUtil.updateTokenString(token);
-            mViewModel.getOwnedStocksList(tokenUtil.getTokenString(), true)
+            mViewModel.getOwnedStocksList(tokenUtil.getTokenString(), false)
                     .observe(this, this::updateInstruments);
         }
     }
 
     private void updateInstruments(@Nullable List<OwnedStock> ownedStockList) {
         if (ownedStockList != null) {
+            AtomicInteger count = new AtomicInteger(ownedStockList.size());
+            Set<String> set = new ConcurrentSkipListSet<>();
             for (OwnedStock ownedStock : ownedStockList) {
-                mViewModel.getInstrument(StringUtils.getInstrumentIdFromUrl(ownedStock.getInstrument()))
-                        .observe(this, instrument -> {
-                            saveInitInFirebase(instrument.getUrl(), instrument.getSymbol());
-                            initTextView.setText(getString(R.string.initialized));
-                        });
-
+                LiveData<Instrument> instrumentLiveData = mViewModel
+                        .getInstrument(StringUtils.getInstrumentIdFromUrl(ownedStock.getInstrument()));
+                instrumentLiveData.observe(this, instrument -> {
+                    initTextView.setText(getString(R.string.initialized));
+                    String symbol = instrument.getSymbol();
+                    String saved = sharedPreferences.getString(instrument.getUrl(), null);
+                    if (saved != null) {
+                        set.add(saved);
+                    }
+                    if (!set.contains(symbol)) {
+                        set.add(symbol);
+                        saveInitInFirebase(instrument.getUrl(), symbol);
+                        sharedPreferences.edit().putString(instrument.getUrl(), symbol).apply();
+                        count.getAndDecrement();
+                        if (count.get() == 0) {
+                            instrumentLiveData.removeObservers(this);
+                        }
+                    }
+                });
             }
         }
     }
