@@ -25,12 +25,15 @@ public class OwnedStockRepository {
     private final ApiService webservice;
     private final OwnedStockDao ownedStockDao;
     private final Executor executor;
+    private final TokenRepository tokenRepository;
 
     @Inject
-    public OwnedStockRepository(ApiService webservice, OwnedStockDao ownedStockDao, Executor executor) {
+    public OwnedStockRepository(ApiService webservice, OwnedStockDao ownedStockDao,
+                                Executor executor, TokenRepository tokenRepository) {
         this.webservice = webservice;
         this.ownedStockDao = ownedStockDao;
         this.executor = executor;
+        this.tokenRepository = tokenRepository;
     }
 
     public LiveData<List<OwnedStock>> getOwnedStockList(String tokenString, boolean isRefreshing) {
@@ -70,6 +73,7 @@ public class OwnedStockRepository {
             @Override
             public void onFailure(Call<CommonResponse<List<OwnedStock>>> call, Throwable t) {
                 Log.e(TAG, t.getMessage());
+                tokenRepository.refreshToken();
             }
         }));
     }

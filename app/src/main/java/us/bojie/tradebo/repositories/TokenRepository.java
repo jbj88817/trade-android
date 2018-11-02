@@ -40,7 +40,7 @@ public class TokenRepository {
         return tokenDao.load(); // return a LiveData directly from the database.
     }
 
-    private void refreshToken() {
+    public void refreshToken() {
         executor.execute(() -> {
             // Check if token was fetched recently
             boolean tokenExists = (tokenDao.hasToken(getMaxRefreshTime(new Date())) != null);

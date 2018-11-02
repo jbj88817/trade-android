@@ -9,7 +9,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -25,6 +29,7 @@ import us.bojie.tradebo.R;
 import us.bojie.tradebo.database.entity.OwnedStock;
 import us.bojie.tradebo.database.entity.Token;
 import us.bojie.tradebo.ui.viewmodels.MainViewModel;
+import us.bojie.tradebo.utils.Constants;
 import us.bojie.tradebo.utils.StringUtils;
 import us.bojie.tradebo.utils.TokenUtils;
 
@@ -34,6 +39,8 @@ public class MainFragment extends Fragment {
     ViewModelProvider.Factory viewModelFactory;
     @Inject
     TokenUtils tokenUtil;
+    @Inject
+    FirebaseFirestore db;
 
     private MainViewModel mViewModel;
 
@@ -94,10 +101,20 @@ public class MainFragment extends Fragment {
         if (ownedStockList != null) {
             for (OwnedStock ownedStock : ownedStockList) {
                 mViewModel.getInstrument(StringUtils.getInstrumentIdFromUrl(ownedStock.getInstrument()))
-                        .observe(this, instrument ->
-                                initTextView.setText(getString(R.string.initialized)));
+                        .observe(this, instrument -> {
+                            saveInitInFirebase(instrument.getUrl(), instrument.getSymbol());
+                            initTextView.setText(getString(R.string.initialized));
+                        });
+
             }
         }
+    }
+
+    private void saveInitInFirebase(String url, String symbol) {
+        Map<String, String> map = new HashMap<>();
+        map.put(Constants.KEY_URL, url);
+        map.put(Constants.KEY_SYMBOL, symbol);
+        db.collection("instruments").add(map);
     }
 
     private void initComponents() {

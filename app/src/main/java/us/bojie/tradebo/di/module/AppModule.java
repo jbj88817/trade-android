@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import javax.inject.Singleton;
 
 import androidx.work.WorkManager;
@@ -38,5 +40,11 @@ public class AppModule {
     @Singleton
     WorkManager providesWorkManager() {
         return WorkManager.getInstance();
+    }
+
+    @Provides
+    @Singleton
+    FirebaseFirestore providesFirebaseFirestore() {
+        return FirebaseFirestore.getInstance();
     }
 }

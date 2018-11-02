@@ -33,8 +33,9 @@ public class RepositoryModule {
 
     @Provides
     @Singleton
-    OwnedStockRepository provideOwnedStockRepository(ApiService webservice, OwnedStockDao ownedStockDao, Executor executor) {
-        return new OwnedStockRepository(webservice, ownedStockDao, executor);
+    OwnedStockRepository provideOwnedStockRepository(ApiService webservice, OwnedStockDao ownedStockDao,
+                                                     Executor executor, TokenRepository repository) {
+        return new OwnedStockRepository(webservice, ownedStockDao, executor, repository);
     }
 
     @Provides
