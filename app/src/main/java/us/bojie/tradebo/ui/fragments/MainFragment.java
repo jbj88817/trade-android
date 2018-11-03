@@ -112,17 +112,20 @@ public class MainFragment extends Fragment {
             for (OwnedStock ownedStock : ownedStockList) {
                 LiveData<Instrument> instrumentLiveData = mViewModel
                         .getInstrument(StringUtils.getInstrumentIdFromUrl(ownedStock.getInstrument()));
+                sharedPreferences.edit().putString(ownedStock.getInstrument(), ownedStock.getAverageBuyPrice()).apply();
                 instrumentLiveData.observe(this, instrument -> {
                     initTextView.setText(getString(R.string.initialized));
                     String symbol = instrument.getSymbol();
-                    String saved = sharedPreferences.getString(instrument.getUrl(), null);
+                    String url = instrument.getUrl();
+                    String saved = sharedPreferences.getString(url, null);
                     if (saved != null) {
                         set.add(saved);
                     }
                     if (!set.contains(symbol)) {
                         set.add(symbol);
-                        saveInitInFirebase(instrument.getUrl(), symbol);
-                        sharedPreferences.edit().putString(instrument.getUrl(), symbol).apply();
+                        String avgPrice = sharedPreferences.getString(url, null);
+                        saveInitInFirebase(url, symbol, avgPrice);
+                        sharedPreferences.edit().putString(url, symbol).apply();
                         count.getAndDecrement();
                         if (count.get() == 0) {
                             instrumentLiveData.removeObservers(this);
@@ -133,11 +136,11 @@ public class MainFragment extends Fragment {
         }
     }
 
-    private void saveInitInFirebase(String url, String symbol) {
+    private void saveInitInFirebase(String url, String symbol, String avgPrice) {
         Map<String, String> map = new HashMap<>();
         map.put(Constants.KEY_URL, url);
-        map.put(Constants.KEY_SYMBOL, symbol);
-        db.collection(Constants.KEY_INSTRUMENTS).add(map);
+        map.put(Constants.KEY_AVG_PRICE, avgPrice);
+        db.collection(Constants.KEY_INSTRUMENTS).document(symbol).set(map);
     }
 
     private void initComponents() {
