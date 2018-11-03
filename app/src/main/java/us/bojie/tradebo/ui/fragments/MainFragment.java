@@ -100,7 +100,7 @@ public class MainFragment extends Fragment {
     private void updateTokenString(@Nullable Token token) {
         if (token != null) {
             tokenUtil.updateTokenString(token);
-            mViewModel.getOwnedStocksList(tokenUtil.getTokenString(), false)
+            mViewModel.getOwnedStocksList(tokenUtil.getTokenString(), true)
                     .observe(this, this::updateInstruments);
         }
     }
@@ -137,7 +137,7 @@ public class MainFragment extends Fragment {
         Map<String, String> map = new HashMap<>();
         map.put(Constants.KEY_URL, url);
         map.put(Constants.KEY_SYMBOL, symbol);
-        db.collection("instruments").add(map);
+        db.collection(Constants.KEY_INSTRUMENTS).add(map);
     }
 
     private void initComponents() {
