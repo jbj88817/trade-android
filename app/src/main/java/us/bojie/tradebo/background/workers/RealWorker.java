@@ -3,12 +3,9 @@ package us.bojie.tradebo.background.workers;
 import android.content.Context;
 import android.util.Log;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -54,7 +51,7 @@ public class RealWorker extends Worker {
 //            return Result.SUCCESS;
 //        }
         fetchSymbolListFromFirebase();
-        return Result.SUCCESS;
+        return Result.RETRY;
 //        try {
 //            Response<Quote> response = apiService.getQuoteFromSymbol(symbol).execute();
 //            if (!response.isSuccessful()) {
@@ -87,37 +84,36 @@ public class RealWorker extends Worker {
     private void fetchSymbolListFromFirebase() {
         db.collection(Constants.KEY_INSTRUMENTS)
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                String symbol = (String) document.getData().get(Constants.KEY_SYMBOL);
-                                getQuote(symbol);
-                            }
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            String symbol = document.getId();
+                            String avgPrice = (String) document.getData().get(Constants.KEY_AVG_PRICE);
+                            getQuote(symbol, avgPrice);
                         }
+                    } else {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
                     }
                 });
 
     }
 
-    private void saveQuoteInFirebase(String askPrice, String symbol) {
+    private void saveQuoteInFirebase(String askPrice, String symbol, String avgPrice) {
         Map<String, String> map = new HashMap<>();
         map.put(Constants.KEY_TIME, Timestamp.now().toDate().toString());
         map.put(Constants.KEY_ASK_PRICE, askPrice);
-        map.put(Constants.KEY_SYMBOL, symbol);
-        db.collection("askPrice").add(map);
+        map.put(Constants.KEY_AVG_PRICE, avgPrice);
+        db.collection(Constants.KEY_QUOTE).document(symbol).set(map);
     }
 
-    private void getQuote(String symbol) {
+    private void getQuote(String symbol, String avgPrice) {
         apiService.getQuoteFromSymbol(symbol).enqueue(new Callback<Quote>() {
             @Override
             public void onResponse(Call<Quote> call, Response<Quote> response) {
                 Quote quote = response.body();
                 if (quote != null) {
-                    saveQuoteInFirebase(quote.getAskPrice(), quote.getSymbol());
+                    saveQuoteInFirebase(quote.getAskPrice(), quote.getSymbol(), avgPrice);
+
                 }
             }
 

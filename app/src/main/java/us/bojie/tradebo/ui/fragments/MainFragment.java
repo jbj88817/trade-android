@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -144,9 +145,17 @@ public class MainFragment extends Fragment {
     }
 
     private void initComponents() {
-        startButton.setOnClickListener(v -> mViewModel.startService());
+        startButton.setOnClickListener(v -> {
+            mViewModel.startService();
+            Toast.makeText(getContext(), "Started !!!", Toast.LENGTH_SHORT).show();
+            initTextView.setText("Started !!!");
+        });
 
-        stopButton.setOnClickListener(v -> mViewModel.stopService());
+        stopButton.setOnClickListener(v -> {
+            mViewModel.stopService();
+            Toast.makeText(getContext(), "Stopped !!!", Toast.LENGTH_SHORT).show();
+            initTextView.setText("Stopped !!!");
+        });
     }
 }
 
