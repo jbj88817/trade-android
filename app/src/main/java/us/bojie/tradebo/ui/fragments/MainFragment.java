@@ -146,7 +146,7 @@ public class MainFragment extends Fragment {
 
     private void initComponents() {
         startButton.setOnClickListener(v -> {
-            mViewModel.startService();
+            mViewModel.startService(tokenUtil.getTokenString());
             Toast.makeText(getContext(), "Started !!!", Toast.LENGTH_SHORT).show();
             initTextView.setText("Started !!!");
         });

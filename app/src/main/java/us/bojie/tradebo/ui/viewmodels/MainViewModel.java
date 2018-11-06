@@ -10,6 +10,7 @@ import javax.inject.Inject;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
+import androidx.work.Data;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
@@ -59,11 +60,12 @@ public class MainViewModel extends ViewModel {
         return instrumentRepository.getInstrument(instrumentId);
     }
 
-    public void startService() {
+    public void startService(String tokenString) {
 
         Log.d(TAG, "!!!Service started !!!");
         PeriodicWorkRequest workRequest = new PeriodicWorkRequest.Builder(RealWorker.class,
                 15, TimeUnit.MINUTES)
+                .setInputData(new Data.Builder().putString(Constants.KEY_TOKEN, tokenString).build())
                 .addTag(Constants.TAG_GET_QUOTE)
                 .build();
 

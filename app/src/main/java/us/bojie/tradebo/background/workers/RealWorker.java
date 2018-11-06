@@ -4,6 +4,8 @@ import android.content.Context;
 import android.util.Log;
 
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -13,8 +15,6 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 import retrofit2.Call;
@@ -33,6 +33,8 @@ public class RealWorker extends Worker {
     @Inject
     ApiService apiService;
     private FirebaseFirestore db;
+    private boolean isOrderExist;
+    private String token;
 //    @Inject
 //    OrderRepository orderRepository;
 //    OwnedStockRepository ownedStockRepository;
@@ -50,8 +52,9 @@ public class RealWorker extends Worker {
 //        if (!WorkUtils.isInOpenStockMarketTime()) {
 //            return Result.SUCCESS;
 //        }
+        token = getInputData().getString(Constants.KEY_TOKEN);
         fetchSymbolListFromFirebase();
-        return Result.RETRY;
+        return Result.SUCCESS;
 //        try {
 //            Response<Quote> response = apiService.getQuoteFromSymbol(symbol).execute();
 //            if (!response.isSuccessful()) {
@@ -88,8 +91,9 @@ public class RealWorker extends Worker {
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             String symbol = document.getId();
+                            String instrumentUrl = (String) document.getData().get(Constants.KEY_URL);
                             String avgPrice = (String) document.getData().get(Constants.KEY_AVG_PRICE);
-                            getQuote(symbol, avgPrice);
+                            getQuote(symbol, avgPrice, instrumentUrl);
                         }
                     } else {
                         Log.d(TAG, "Error getting documents: ", task.getException());
@@ -106,14 +110,14 @@ public class RealWorker extends Worker {
         db.collection(Constants.KEY_QUOTE).document(symbol).set(map);
     }
 
-    private void getQuote(String symbol, String avgPrice) {
+    private void getQuote(String symbol, String avgPrice, String instrumentUrl) {
         apiService.getQuoteFromSymbol(symbol).enqueue(new Callback<Quote>() {
             @Override
             public void onResponse(Call<Quote> call, Response<Quote> response) {
                 Quote quote = response.body();
                 if (quote != null) {
                     saveQuoteInFirebase(quote.getAskPrice(), quote.getSymbol(), avgPrice);
-
+                    comparePriceAndCallPlaceOrder(quote.getAskPrice(), avgPrice, symbol, instrumentUrl);
                 }
             }
 
@@ -124,14 +128,39 @@ public class RealWorker extends Worker {
         });
     }
 
-    private LiveData<Order> placeOrder(String tokenString, OrderRequest orderRequest) {
-        MutableLiveData<Order> orderMutableLiveData = new MutableLiveData<>();
+    private void comparePriceAndCallPlaceOrder(String askPriceString, String avgPriceString,
+                                               String symbol, String instrumentUrl) {
+        Double askPrice = Double.valueOf(askPriceString);
+        Double avgPrice = Double.valueOf(avgPriceString);
+        fetchOrderFromFirebase(instrumentUrl);
+        if (!isOrderExist && askPrice > avgPrice * 1.10) {
+            OrderRequest request = new OrderRequest.Builder(instrumentUrl, symbol,
+                    "sell", "9", String.valueOf(avgPrice * 1.08)).build();
+            placeOrder(token, request);
+        }
+    }
+
+    private void fetchOrderFromFirebase(String instrumentUrl) {
+        DocumentReference docRef = db.collection(Constants.KEY_ORDER).document(instrumentUrl);
+        docRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                isOrderExist = document != null && document.exists();
+            } else {
+                Log.d(TAG, "get failed with ", task.getException());
+            }
+        });
+    }
+
+    private void placeOrder(String tokenString, OrderRequest orderRequest) {
         apiService.postOrder(tokenString, orderRequest).enqueue(new Callback<Order>() {
             @Override
             public void onResponse(Call<Order> call, Response<Order> response) {
                 Order order = response.body();
+                if (order != null) {
+                    saveOrderInFirebase(order);
+                }
 //                orderRepository.saveOrder(order);
-                orderMutableLiveData.setValue(order);
             }
 
             @Override
@@ -139,6 +168,9 @@ public class RealWorker extends Worker {
                 Log.e(TAG, t.getMessage());
             }
         });
-        return orderMutableLiveData;
+    }
+
+    private void saveOrderInFirebase(Order order) {
+        db.collection(Constants.KEY_ORDER).document(order.getInstrument()).set(order);
     }
 }

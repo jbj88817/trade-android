@@ -14,6 +14,7 @@ public class Constants {
     public static final String KEY_MARKET = "market";
     public static final String KEY_GTC = "gtc";
     public static final String KEY_STOP = "stop";
+    public static final String KEY_ORDER = "order";
     public static final String KEY_TOKEN = "token";
     public static final String KEY_INSTRUMENTS = "instruments";
     public static final String NAME_SHARED_PREFERENCES = "trade_preferences";
