@@ -10,6 +10,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -26,6 +27,7 @@ import us.bojie.tradebo.bean.response.Quote;
 import us.bojie.tradebo.database.entity.Order;
 import us.bojie.tradebo.di.component.DaggerWorkerComponent;
 import us.bojie.tradebo.utils.Constants;
+import us.bojie.tradebo.utils.StringUtils;
 
 public class RealWorker extends Worker {
 
@@ -33,7 +35,6 @@ public class RealWorker extends Worker {
     @Inject
     ApiService apiService;
     private FirebaseFirestore db;
-    private boolean isOrderExist;
     private String token;
 //    @Inject
 //    OrderRepository orderRepository;
@@ -132,20 +133,25 @@ public class RealWorker extends Worker {
                                                String symbol, String instrumentUrl) {
         Double askPrice = Double.valueOf(askPriceString);
         Double avgPrice = Double.valueOf(avgPriceString);
-        fetchOrderFromFirebase(instrumentUrl);
-        if (!isOrderExist && askPrice > avgPrice * 1.10) {
-            OrderRequest request = new OrderRequest.Builder(instrumentUrl, symbol,
-                    "sell", "9", String.valueOf(avgPrice * 1.08)).build();
-            placeOrder(token, request);
-        }
+        fetchOrderFromFirebase(instrumentUrl, askPrice, avgPrice, symbol);
     }
 
-    private void fetchOrderFromFirebase(String instrumentUrl) {
-        DocumentReference docRef = db.collection(Constants.KEY_ORDER).document(instrumentUrl);
+    private void fetchOrderFromFirebase(String instrumentUrl, Double askPrice,
+                                        Double avgPrice, String symbol) {
+        DocumentReference docRef = db.collection(Constants.KEY_ORDER)
+                .document(StringUtils.getInstrumentIdFromUrl(instrumentUrl));
         docRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
-                isOrderExist = document != null && document.exists();
+                if (document != null && document.exists()) {
+                    if (askPrice > avgPrice * 1.10) {
+                        double sellingPrice = avgPrice * 1.08;
+                        String formatSellPrice = String.format(Locale.US, "%.2f", sellingPrice);
+                        OrderRequest request = new OrderRequest.Builder(instrumentUrl, symbol,
+                                "sell", "9", formatSellPrice).build();
+                        placeOrder(token, request);
+                    }
+                }
             } else {
                 Log.d(TAG, "get failed with ", task.getException());
             }
@@ -171,6 +177,7 @@ public class RealWorker extends Worker {
     }
 
     private void saveOrderInFirebase(Order order) {
-        db.collection(Constants.KEY_ORDER).document(order.getInstrument()).set(order);
+        db.collection(Constants.KEY_ORDER).document(StringUtils.getInstrumentIdFromUrl(order
+                .getInstrument())).set(order);
     }
 }

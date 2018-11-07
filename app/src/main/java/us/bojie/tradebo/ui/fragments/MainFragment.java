@@ -113,7 +113,7 @@ public class MainFragment extends Fragment {
             for (OwnedStock ownedStock : ownedStockList) {
                 LiveData<Instrument> instrumentLiveData = mViewModel
                         .getInstrument(StringUtils.getInstrumentIdFromUrl(ownedStock.getInstrument()));
-                sharedPreferences.edit().putString(ownedStock.getInstrument(), ownedStock.getAverageBuyPrice()).apply();
+                sharedPreferences.edit().putString(ownedStock.getInstrument(), ownedStock.getAverageBuyPrice()).commit();
                 instrumentLiveData.observe(this, instrument -> {
                     initTextView.setText(getString(R.string.initialized));
                     String symbol = instrument.getSymbol();
@@ -126,7 +126,7 @@ public class MainFragment extends Fragment {
                         set.add(symbol);
                         String avgPrice = sharedPreferences.getString(url, null);
                         saveInitInFirebase(url, symbol, avgPrice);
-                        sharedPreferences.edit().putString(url, symbol).apply();
+                        sharedPreferences.edit().putString(url, symbol).commit();
                         count.getAndDecrement();
                         if (count.get() == 0) {
                             instrumentLiveData.removeObservers(this);
