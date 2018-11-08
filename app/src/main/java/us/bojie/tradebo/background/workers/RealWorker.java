@@ -166,7 +166,6 @@ public class RealWorker extends Worker {
                 if (order != null) {
                     saveOrderInFirebase(order);
                 }
-//                orderRepository.saveOrder(order);
             }
 
             @Override
